@@ -1,0 +1,6 @@
+Cell_ID,Batch_ID,Production_Line,Shift,Supplier,Ambient_Temp_C,Anode_Overhang_mm,Electrolyte_Volume_ml,Internal_Resistance_mOhm,Capacity_mAh,Retention_50Cycle_Pct
+CELL-021345,BTH-0002,Line_2,Morning,ElectraInc,21.45,0.112,14.72,13.85,4995.0,98.12
+CELL-033876,BTH-0002,Line_1,Evening,ChemCorp,23.10,0.130,15.02,14.55,4978.0,97.20
+CELL-045219,BTH-0003,Line_3,Night,PowerCells,19.88,0.105,14.65,13.60,5002.0,98.45
+CELL-058764,BTH-0003,Line_2,Morning,ElectraInc,22.05,0.118,14.90,14.20,4987.0,97.65
+CELL-067981,BTH-0004,Line_1,Evening,ChemCorp,21.72,0.121,14.85,14.05,4991.0,97.90
