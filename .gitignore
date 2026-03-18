@@ -4,3 +4,4 @@ mlflow.db
 predictions.log
 project.zip
 __pycache__/
+Dockerfile

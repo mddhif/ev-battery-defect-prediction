@@ -1,7 +1,7 @@
 import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StringType, DoubleType
-from pyspark.sql.functions import from_json, col
+from pyspark.sql.functions import from_json, col, avg, window
 import requests
 import os
 from dotenv import load_dotenv
@@ -53,16 +53,27 @@ df = spark.readStream \
 
 parsed = df.selectExpr("CAST(value AS STRING)") \
     .select(from_json(col("value"), schema).alias("data")) \
-    .select("data.*")
+    .select("data.*") \
+    .filter(col("Capacity_mAh") > 0)
 
+agg = parsed.groupBy(
+    window(col("timestamp"), "1 minute"),
+    col("Production_Line")
+).agg(avg("Capacity_mAh").alias("avg_capacity"))
 
-query = parsed.writeStream \
+rabbit_query = parsed.writeStream \
     .foreachBatch(publish_to_rabbit) \
     .trigger(processingTime="5 seconds") \
+    .start()
+
+monitoring = agg.writeStream \
+    .outputMode("update") \
+    .format("console") \
     .start()
 
 '''query = parsed.writeStream \
     .format("console") \
     .start()'''
 
-query.awaitTermination()
+#rabbit_query.awaitTermination()
+spark.streams.awaitAnyTermination()
