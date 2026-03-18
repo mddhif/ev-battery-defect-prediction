@@ -1,3 +1,6 @@
 mlartifacts/
 mlflow.db
 .env
+predictions.log
+project.zip
+__pycache__/

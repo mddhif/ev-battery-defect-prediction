@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report
+from mlflow.models.signature import infer_signature
 import mlflow.sklearn
 import joblib
 import mlflow
@@ -42,7 +43,7 @@ numeric = [
 preprocessor = ColumnTransformer(
     transformers=[
         ("num", "passthrough", numeric),
-        ("cat", OneHotEncoder(), categorical)
+        ("cat", OneHotEncoder(handle_unknown="ignore"), categorical)
     ]
 )
 
@@ -63,9 +64,11 @@ with mlflow.start_run(run_name="EVBatteryModelPrototype") as run:
 
     print(classification_report(y_test, preds))
 
+    signature = infer_signature(X_train, model.predict(X_train))
+
     joblib.dump(model, "models/ev_battery_model.pkl")
     mlflow.log_artifact("models/ev_battery_model.pkl")
-    mlflow.sklearn.log_model(model, "ev_battery_model")
+    mlflow.sklearn.log_model(model, "ev_battery_model", signature=signature)
 
     print("MLflow Run ID:", run.info.run_id)
     
